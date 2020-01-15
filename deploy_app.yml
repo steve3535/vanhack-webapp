@@ -46,7 +46,7 @@
           #          name: mysqldb
           #          published_ports: 3306:3306
           - name: Run the app
-            shell: docker-compose -f myapp/docker-compose.yml up
+            shell: docker-compose -f myapp/docker-compose.yml up -d
 
 
 
