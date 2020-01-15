@@ -1,0 +1,11 @@
+- name: Add keys
+  hosts: webservers
+  become: true
+  tasks:
+  - name: Add public keys for developers
+    authorized_key: user=ubuntu
+                  key="{{ lookup('file', item) }}"
+    with_fileglob:
+    - public_keys/*.pub
+
+

@@ -1,0 +1,55 @@
+- name: deploy the webapp
+  hosts: webservers
+  tasks:
+          - name: install Docker engine
+            become: true
+            apt: name=docker-ce update_cache=yes
+
+          - name: install pip
+            become: true
+            apt: name=python-pip 
+
+          - name: usermod ubuntu 
+            become: true
+            shell: usermod -aG docker ubuntu
+
+          - name: Install Docker Module for Python
+            pip:
+               name: docker
+
+          - name: copy app folder
+            copy:
+                    src: ./myapp
+                    dest: /home/ubuntu/
+          - name: Build docker frontend image
+            docker_image:
+                    name: mywebapp
+                    path: ./myapp/flask
+
+          - name: Build mysqldb image
+            docker_image:
+                    name: mysqldb
+                    path: ./myapp/mysql
+          - name: Create the web container
+            docker_container:
+                    image: mywebapp
+                    state: started
+                    name: mywebapp
+                    published_ports: 80:80
+          - name: Create the DB container
+            docker_container:
+                    image: mysqldb
+                    state: started
+                    name: mysqldb
+                    published_ports: 3306:3306
+                    #networks:
+                    #- name: bridge
+                    #ipv4_address: 172.17.0.2
+
+
+
+
+                  
+
+
+        

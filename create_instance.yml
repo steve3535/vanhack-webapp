@@ -1,0 +1,70 @@
+-   name: Creation
+    hosts: localhost
+    connection: local
+    tasks:
+    -   name: Create security group
+        ec2_group:
+          name: "vanhack_project_security_group"
+          description: assignment
+          region: "us-east-1"
+          rules:
+            - proto: tcp
+              from_port: 22
+              to_port: 22
+              cidr_ip: 0.0.0.0/0
+            - proto: tcp
+              from_port: 80
+              to_port: 80
+              cidr_ip: 0.0.0.0/0
+            - proto: tcp
+              from_port: 443
+              to_port: 443
+              cidr_ip: 0.0.0.0/0
+          rules_egress:
+            - proto: all
+              cidr_ip: 0.0.0.0/0
+        register: basic_firewall
+
+    -   name: Create an EC2 key
+        ec2_key:
+          name: "vanhack_project-key"
+          region: "us-east-1"
+        register: ec2_key_result
+
+    -   name: save private key
+        copy: content="{{ ec2_key_result.key.private_key }}" dest="./vanhack_project-key.pem" mode=0400
+        #when: ec2_key_result.changed
+
+    -   name: Create an EC2 instance
+        ec2:
+          key_name: "vanhack_project-key"
+          region: "us-east-1"
+          group_id: "{{ basic_firewall.group_id }}"
+          instance_type: "t2.micro"
+          image: "ami-59a67a4f"
+          wait: yes
+          count: 1
+        register: ec2
+
+    -   name: save IP to inventory file
+        copy: content="[webservers]{{'\n'}}"{{ item.public_ip }} ansible_ssh_user=ubuntu ansible_ssh_private_key_file=./vanhack_project-key.pem{{'\n'}}" dest=./inventory
+        with_items: '{{ ec2.instances }}'
+
+        #-   name: Add IP to ec2_hosts group
+        #add_host: hostname={{ item.public_ip }} groups=ec2_hosts
+        #with_items: '{{ ec2.instances }}'
+
+        #-   name: Make sure user is on server and generate ssh key for it
+        #become: yes
+        #remote_user: ec2-user
+        #user: name=ubuntu
+        #generate_ssh_key=yes
+
+        #-   name: Add public keys for developers
+        #become: yes
+        #recome_user: ec2-user
+        #authorized_key: user=ubuntu
+        #      key="{{ lookup('file', item) }}"
+        #with_fileglob:
+        #  - public_keys/*.pub
+
