@@ -5,7 +5,7 @@ import re
 
 app = Flask(__name__)
 
-app.config['MYSQL_HOST'] = '172.17.0.1'
+app.config['MYSQL_HOST'] = 'db'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = '123456'
 app.config['MYSQL_DB'] = 'APPDB'

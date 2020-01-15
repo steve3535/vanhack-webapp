@@ -1,0 +1,15 @@
+version: "2"
+services:
+  app:
+    image: mywebapp
+    links:
+      - db
+    ports:
+      - "80:80"
+
+  db:
+    image: mysqldb
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456

@@ -16,6 +16,9 @@
           - name: Install Docker Module for Python
             pip:
                name: docker
+          - name: install the latest version of compose
+            become: true
+            shell: curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/bin/docker-compose && chmod +x /usr/bin/docker-compose
 
           - name: copy app folder
             copy:
@@ -30,21 +33,20 @@
             docker_image:
                     name: mysqldb
                     path: ./myapp/mysql
-          - name: Create the web container
-            docker_container:
-                    image: mywebapp
-                    state: started
-                    name: mywebapp
-                    published_ports: 80:80
-          - name: Create the DB container
-            docker_container:
-                    image: mysqldb
-                    state: started
-                    name: mysqldb
-                    published_ports: 3306:3306
-                    #networks:
-                    #- name: bridge
-                    #ipv4_address: 172.17.0.2
+          #- name: Create the web container
+          #docker_container:
+          #          image: mywebapp
+          #          state: started
+          #          name: mywebapp
+          #          published_ports: 80:80
+          #- name: Create the DB container
+          #  docker_container:
+          #         image: mysqldb
+          #          state: started
+          #          name: mysqldb
+          #          published_ports: 3306:3306
+          - name: Run the app
+            shell: docker-compose -f myapp/docker-compose.yml up
 
 
 
