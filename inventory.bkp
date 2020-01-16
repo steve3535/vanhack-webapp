@@ -1,2 +1,2 @@
 [webservers]
-52.207.246.29 ansible_ssh_user=ubuntu ansible_ssh_private_key_file=./vanhack_project-key.pem
+52.207.246.29 ansible_ssh_user=ubuntu
