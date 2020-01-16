@@ -1,9 +1,14 @@
 - name: deploy the webapp
   hosts: webservers
   tasks:
+          - name: apt-get update
+            become: true
+            apt:
+                    upgrade: yes
+                    update_cache: yes
           - name: install Docker engine
             become: true
-            apt: name=docker-ce update_cache=yes
+            shell: curl -fsSL https://get.docker.com | sh
 
           - name: install pip
             become: true
@@ -25,33 +30,16 @@
                     src: ./myapp
                     dest: /home/ubuntu/
           - name: Build docker frontend image
+            become: true
             docker_image:
                     name: mywebapp
                     path: ./myapp/flask
 
           - name: Build mysqldb image
+            become: true
             docker_image:
                     name: mysqldb
                     path: ./myapp/mysql
-          #- name: Create the web container
-          #docker_container:
-          #          image: mywebapp
-          #          state: started
-          #          name: mywebapp
-          #          published_ports: 80:80
-          #- name: Create the DB container
-          #  docker_container:
-          #         image: mysqldb
-          #          state: started
-          #          name: mysqldb
-          #          published_ports: 3306:3306
+          
           - name: Run the app
             shell: docker-compose -f myapp/docker-compose.yml up -d
-
-
-
-
-                  
-
-
-        
