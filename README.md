@@ -2,8 +2,8 @@
 ///// EC2 instances creation ///////
 
 1- use the following AWS keys:
-   Access key ID  = AKIARBWFA52D3EWS4C2X
-   Secret access key = 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
+   Access key ID  = 
+   Secret access key = 
 
 2- Run the playbook "create_instance.yml"
    
