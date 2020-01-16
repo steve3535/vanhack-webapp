@@ -43,7 +43,7 @@
           region: "us-east-1"
           group_id: "{{ basic_firewall.group_id }}"
           instance_type: "t2.micro"
-          image: "ami-59a67a4f"
+          image: "ami-0ead4d3c2d010dee1"
           wait: yes
           count: 1
         register: ec2

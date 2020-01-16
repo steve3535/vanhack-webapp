@@ -8,11 +8,12 @@
                     update_cache: yes
           - name: install Docker engine
             become: true
-            shell: curl -fsSL https://get.docker.com | sh
+            #shell: curl -fsSL https://get.docker.com | sh
+            apt: name=docker.io
 
           - name: install pip
             become: true
-            apt: name=python-pip 
+            apt: name=python3-pip 
 
           - name: usermod ubuntu 
             become: true
@@ -29,17 +30,21 @@
             copy:
                     src: ./myapp
                     dest: /home/ubuntu/
+
           - name: Build docker frontend image
             become: true
-            docker_image:
-                    name: mywebapp
-                    path: ./myapp/flask
+            #docker_image:
+            #        name: mywebapp
+            #        path: ./myapp/flask
+
+            shell: docker build -t mywebapp ./myapp/flask
 
           - name: Build mysqldb image
             become: true
-            docker_image:
-                    name: mysqldb
-                    path: ./myapp/mysql
+            #docker_image:
+            #        name: mysqldb
+            #        path: ./myapp/mysql
+            shell: docker build -t mysqldb ./myapp/mysql
           
           - name: Run the app
             shell: docker-compose -f myapp/docker-compose.yml up -d
