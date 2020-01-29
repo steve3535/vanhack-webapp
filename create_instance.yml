@@ -33,9 +33,6 @@
           force: yes
         register: ec2_key_result
 
-        #-   name: save private key
-        #copy: content="{{ ec2_key_result.key.private_key }}" dest="./vanhack_project-key.pem" mode=0400
-        #when: ec2_key_result.changed
 
     -   name: Create an EC2 instance
         ec2:

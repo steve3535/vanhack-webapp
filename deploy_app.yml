@@ -48,3 +48,7 @@
           
           - name: Run the app
             shell: docker-compose -f myapp/docker-compose.yml up -d
+            retries: 3
+            delay: 3
+            register: result
+            until: result.rc == 0
